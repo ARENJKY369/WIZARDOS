@@ -23,6 +23,7 @@ class CameraWorker(QThread):
         self.tracker = tracker or HandTracker()
         self._running = False
         self._active_index: int | None = None
+        self.current_fps = 0.0
 
     @staticmethod
     def probe_cameras(max_index: int = 6) -> list[int]:  # pragma: no cover - hardware dependent
@@ -88,8 +89,8 @@ class CameraWorker(QThread):
             frames += 1
             now = time.perf_counter()
             if now - last >= 1.0:
-                fps = frames / (now - last)
-                self.fps_ready.emit(fps)
+                self.current_fps = frames / (now - last)
+                self.fps_ready.emit(self.current_fps)
                 frames = 0
                 last = now
             sleep_time = max(0.0, (1 / max(self.target_fps, 1)) - (time.perf_counter() - now))
@@ -142,9 +143,41 @@ class CameraWorker(QThread):
             x, y = map(int, tracking.tip)
             cv2.circle(frame, (x, y), 12, (255, 240, 120), 2, cv2.LINE_AA)
             cv2.circle(frame, (x, y), 4, (255, 255, 255), -1, cv2.LINE_AA)
+        
+        # Upper info label
         label = f"Tip: {tracking.source}  confidence {tracking.confidence:.0%}  velocity {tracking.velocity:.0f}px/s"
         cv2.putText(frame, label, (18, 34), cv2.FONT_HERSHEY_SIMPLEX, 0.75, (10, 10, 10), 4, cv2.LINE_AA)
         cv2.putText(frame, label, (18, 34), cv2.FONT_HERSHEY_SIMPLEX, 0.75, (130, 235, 255), 2, cv2.LINE_AA)
+
+        # Detailed Debug Overlay checklist requirements:
+        # - Current fingertip coordinates
+        # - Wand sensor coordinates
+        # - Tracking confidence
+        # - FPS
+        # - Detection status
+        debug_lines = []
+        status_str = "Detected" if tracking.detected else "No Hand/Wand"
+        debug_lines.append(f"Detection status: {status_str}")
+        debug_lines.append(f"FPS: {self.current_fps:.1f}")
+        debug_lines.append(f"Tracking confidence: {tracking.confidence:.0%}")
+        
+        if tracking.landmarks and len(tracking.landmarks) > 8:
+            fx, fy = tracking.landmarks[8]
+            debug_lines.append(f"Fingertip (lm8) coords: {fx:.1f}, {fy:.1f}")
+        else:
+            debug_lines.append("Fingertip (lm8) coords: N/A")
+            
+        if tracking.tip:
+            tx, ty = tracking.tip
+            debug_lines.append(f"Wand sensor coords: {tx:.1f}, {ty:.1f}")
+        else:
+            debug_lines.append("Wand sensor coords: N/A")
+            
+        y_pos = 70
+        for line in debug_lines:
+            cv2.putText(frame, line, (18, y_pos), cv2.FONT_HERSHEY_SIMPLEX, 0.55, (10, 10, 10), 3, cv2.LINE_AA)
+            cv2.putText(frame, line, (18, y_pos), cv2.FONT_HERSHEY_SIMPLEX, 0.55, (100, 255, 150), 1, cv2.LINE_AA)
+            y_pos += 24
 
     def stop(self) -> None:
         self._running = False

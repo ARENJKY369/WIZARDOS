@@ -10,6 +10,7 @@ from PySide6.QtWidgets import (
     QWidget,
     QHBoxLayout,
     QVBoxLayout,
+    QGridLayout,
     QLabel,
     QPushButton,
     QListWidget,
@@ -34,6 +35,7 @@ from ui.widgets import GlassPanel
 from utils.actions import DesktopActionRunner
 from utils.stats import StatsManager
 from vision.hand_tracker import HandTracker, HandTrackingResult
+from vision.wand_controller import WandController
 
 
 class MainWindow(QMainWindow):
@@ -44,13 +46,15 @@ class MainWindow(QMainWindow):
         self.resize(1480, 900)
         self.setStyleSheet(DARK_QSS)
 
+        self.wand_controller = WandController()
+        self.stroke: deque[tuple[float, float]] = self.wand_controller.stroke
+
         self.recognizer = GestureRecognizer()
         self.training = TrainingManager(self.recognizer)
         self.spellbook = SpellbookManager()
         self.stats = StatsManager()
         self.sound = SoundEngine(settings.get("audio.enabled", True), settings.get("audio.master_volume", 0.75))
         self.actions = DesktopActionRunner(toggle_dark_mode=self.toggle_dark_mode)
-        self.stroke: deque[tuple[float, float]] = deque(maxlen=220)
         self.last_tip_time = 0.0
         self.last_recognized_at = 0.0
         self.source_size = (settings.get("camera.width", 1280), settings.get("camera.height", 720))
@@ -81,15 +85,27 @@ class MainWindow(QMainWindow):
         layout.addWidget(splitter)
 
         left = GlassPanel("Scrying Camera")
+        
+        # Transparent overlay layout placing MagicRenderer exactly over camera feed
+        self.overlay_container = QWidget()
+        overlay_layout = QGridLayout(self.overlay_container)
+        overlay_layout.setContentsMargins(0, 0, 0, 0)
+        overlay_layout.setSpacing(0)
+
         self.camera_label = QLabel("Camera feed loading…")
         self.camera_label.setAlignment(Qt.AlignmentFlag.AlignCenter)
         self.camera_label.setMinimumSize(640, 360)
         self.camera_label.setStyleSheet("border-radius: 18px; background: #02040A; color:#75E7FF;")
+        
         self.renderer = MagicRenderer()
+        self.renderer.set_wand_controller(self.wand_controller)
         self.renderer.setMinimumSize(640, 360)
         self.renderer.mouse_stroke_changed.connect(self._recognize_mouse_stroke)
-        left.layout.addWidget(self.camera_label, 1)
-        left.layout.addWidget(self.renderer, 1)
+
+        overlay_layout.addWidget(self.camera_label, 0, 0)
+        overlay_layout.addWidget(self.renderer, 0, 0)
+
+        left.layout.addWidget(self.overlay_container, 1)
         splitter.addWidget(left)
 
         right = GlassPanel("Arcane Telemetry")
@@ -297,6 +313,13 @@ class MainWindow(QMainWindow):
 
     def _on_frame(self, image: QImage) -> None:
         self.source_size = (image.width(), image.height())
+        if self.wand_controller:
+            self.wand_controller.mapper.set_sizes(
+                video_width=image.width(),
+                video_height=image.height(),
+                widget_width=self.renderer.width(),
+                widget_height=self.renderer.height(),
+            )
         pix = QPixmap.fromImage(image).scaled(self.camera_label.size(), Qt.AspectRatioMode.KeepAspectRatio, Qt.TransformationMode.SmoothTransformation)
         self.camera_label.setPixmap(pix)
 
@@ -304,15 +327,15 @@ class MainWindow(QMainWindow):
         self.hand_label.setText(f"Detected hand/wand: {'yes' if result.detected else 'no'}")
         self.tip_source_label.setText(f"Tracking source: {result.source} ({result.confidence:.0%})")
         self.velocity_label.setText(f"Wand speed: {result.velocity:.0f} px/s")
-        now = time.monotonic()
-        if result.tip:
-            self.last_tip_time = now
-            # Ignore tiny hover jitter; record only deliberate movement or a new stroke.
-            if result.velocity > 35 or len(self.stroke) < 4:
-                self.stroke.append(result.tip)
-            self.renderer.update_tip(result.tip, self.source_size)
-        elif now - self.last_tip_time > self.settings.get("recognition.stroke_timeout_ms", 850) / 1000:
-            self.stroke.clear()
+        timeout = self.settings.get("recognition.stroke_timeout_ms", 850.0)
+        self.wand_controller.update_position(
+            detected=result.detected,
+            tip=result.tip,
+            source=result.source,
+            confidence=result.confidence,
+            velocity=result.velocity,
+            stroke_timeout_ms=timeout,
+        )
 
     def _recognize_live_stroke(self) -> None:
         if len(self.stroke) < self.settings.get("recognition.min_points", 18):
@@ -323,7 +346,7 @@ class MainWindow(QMainWindow):
         self.confidence_label.setText(f"Recognition confidence: {result.confidence:.0%} ({result.gesture})")
         if result.confidence >= self.settings.get("recognition.confidence_threshold", 0.70):
             self._cast_by_gesture(result.gesture, result.confidence)
-            self.stroke.clear()
+            self.wand_controller.clear_stroke()
             self.last_recognized_at = time.monotonic()
 
     def _recognize_mouse_stroke(self, stroke: list[tuple[float, float]]) -> None:
