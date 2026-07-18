@@ -65,7 +65,7 @@ cd WizardOS/     # .python-version is read automatically
 Or create a fresh virtual environment with your preferred Python version:
 
 ```bash
-python3.14 -m venv .venv        # or python3.13 / python3.12
+python -m venv .venv        # uses your active Python version (3.14 in this case)
 source .venv/bin/activate        # Windows: .venv\Scripts\activate
 python -m pip install --upgrade pip
 ```
@@ -76,7 +76,7 @@ python -m pip install --upgrade pip
 pip install -r requirements.txt
 ```
 
-All dependencies (`PySide6 ≥6.8.1`, `mediapipe ≥0.10.35`, `opencv-python`, `numpy ≥2.0.0`, `pygame`, `rich`, `pyinstaller`) ship pre-built wheels for Python 3.12–3.14 on all major platforms.
+All dependencies (`PySide6 ≥6.8.1`, `mediapipe ≥0.10.35`, `opencv-python`, `numpy ≥2.0.0`, `pygame-ce`, `rich`, `pyinstaller`) ship pre-built wheels for Python 3.12–3.14 on all major platforms. Note: `pygame-ce` is used instead of original `pygame` for full Python 3.14 compatibility.
 
 On Linux, OpenCV/PySide camera and OpenGL support may require system packages such as `libgl1`, `libegl1`, or `v4l-utils`, depending on your distribution.
 

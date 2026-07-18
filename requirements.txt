@@ -14,8 +14,8 @@ mediapipe>=0.10.35
 # Numerical arrays — 2.x requires Python 3.12+
 numpy>=2.0.0
 
-# Audio synthesis — 2.6.1 stable
-pygame>=2.6.1
+# Audio synthesis — pygame-ce supports Python 3.14; original pygame lacks 3.14 wheels
+pygame-ce>=2.5.6
 
 # Rich terminal logging
 rich>=13.9.0
