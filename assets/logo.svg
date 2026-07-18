@@ -1,0 +1,86 @@
+<svg width="1400" height="520" viewBox="0 0 1400 520" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="WizardOS logo">
+  <defs>
+    <radialGradient id="cosmos" cx="42%" cy="38%" r="78%">
+      <stop offset="0" stop-color="#254B9A"/>
+      <stop offset="0.32" stop-color="#101E43"/>
+      <stop offset="0.72" stop-color="#060916"/>
+      <stop offset="1" stop-color="#02030A"/>
+    </radialGradient>
+    <linearGradient id="gold" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#FFF2B8"/>
+      <stop offset="0.25" stop-color="#FFD76A"/>
+      <stop offset="0.58" stop-color="#D09B2E"/>
+      <stop offset="1" stop-color="#6C4510"/>
+    </linearGradient>
+    <linearGradient id="ice" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#D9FEFF"/>
+      <stop offset="0.45" stop-color="#73E7FF"/>
+      <stop offset="1" stop-color="#366EFF"/>
+    </linearGradient>
+    <linearGradient id="purple" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#E3C4FF"/>
+      <stop offset="1" stop-color="#7B42FF"/>
+    </linearGradient>
+    <filter id="softGlow" x="-80%" y="-80%" width="260%" height="260%">
+      <feGaussianBlur stdDeviation="8" result="b"/>
+      <feColorMatrix in="b" type="matrix" values="0 0 0 0 0.45  0 0 0 0 0.9  0 0 0 0 1  0 0 0 0.9 0"/>
+      <feMerge><feMergeNode/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+    <filter id="goldGlow" x="-50%" y="-50%" width="200%" height="200%">
+      <feGaussianBlur stdDeviation="5" result="b"/>
+      <feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+    <pattern id="runes" width="76" height="76" patternUnits="userSpaceOnUse">
+      <path d="M18 18h18m-9-9v36M50 14l13 22-13 22-13-22z" fill="none" stroke="#75E7FF" stroke-width="2" opacity="0.18"/>
+    </pattern>
+  </defs>
+
+  <rect width="1400" height="520" rx="54" fill="url(#cosmos)"/>
+  <rect x="12" y="12" width="1376" height="496" rx="46" fill="url(#runes)" opacity="0.65"/>
+  <rect x="17" y="17" width="1366" height="486" rx="42" fill="none" stroke="url(#gold)" stroke-width="5" opacity="0.9"/>
+  <rect x="31" y="31" width="1338" height="458" rx="33" fill="none" stroke="#75E7FF" stroke-width="2" opacity="0.36" stroke-dasharray="18 16"/>
+
+  <!-- Stars and floating particles -->
+  <g filter="url(#softGlow)">
+    <circle cx="101" cy="83" r="3" fill="#D9FEFF"/><circle cx="235" cy="411" r="4" fill="#75E7FF"/>
+    <circle cx="524" cy="70" r="3" fill="#FFD76A"/><circle cx="1205" cy="86" r="4" fill="#D9FEFF"/>
+    <circle cx="1310" cy="398" r="3" fill="#75E7FF"/><circle cx="937" cy="446" r="4" fill="#FFD76A"/>
+    <path d="M112 257c34-36 84-54 140-42" stroke="#75E7FF" stroke-width="4" opacity="0.45" fill="none" stroke-linecap="round"/>
+    <path d="M1032 118c70-34 144-20 207 38" stroke="#FFD76A" stroke-width="4" opacity="0.38" fill="none" stroke-linecap="round"/>
+  </g>
+
+  <!-- Badge -->
+  <g transform="translate(92 66)">
+    <circle cx="194" cy="194" r="184" fill="#070B18" opacity="0.78"/>
+    <circle cx="194" cy="194" r="176" fill="none" stroke="url(#gold)" stroke-width="10" filter="url(#goldGlow)"/>
+    <circle cx="194" cy="194" r="140" fill="none" stroke="url(#ice)" stroke-width="4" opacity="0.68" stroke-dasharray="14 11"/>
+    <path d="M67 252 C111 193 136 123 154 50 C178 125 198 184 214 252 C238 168 264 104 296 50 C314 130 338 199 321 252" fill="none" stroke="url(#gold)" stroke-width="28" stroke-linecap="round" stroke-linejoin="round" filter="url(#goldGlow)"/>
+    <path d="M108 307 L280 307" stroke="url(#gold)" stroke-width="23" stroke-linecap="round" filter="url(#goldGlow)"/>
+    <path d="M329 55 L352 103 L405 111 L366 148 L375 201 L329 176 L282 201 L292 148 L253 111 L306 103 Z" fill="url(#ice)" filter="url(#softGlow)"/>
+    <path d="M58 111 C101 78 157 64 214 76 C249 84 279 101 305 127" fill="none" stroke="#D9FEFF" stroke-width="6" stroke-linecap="round" opacity="0.9" filter="url(#softGlow)"/>
+    <path d="M24 356 C105 328 257 331 363 359" fill="none" stroke="url(#purple)" stroke-width="5" opacity="0.65" stroke-linecap="round"/>
+  </g>
+
+  <!-- Wand slash -->
+  <g filter="url(#softGlow)">
+    <path d="M525 358 C705 230 875 164 1127 101" stroke="#D9FEFF" stroke-width="10" stroke-linecap="round" opacity="0.92"/>
+    <path d="M523 359 C704 231 875 165 1127 102" stroke="#6BEAFF" stroke-width="3" stroke-linecap="round"/>
+    <circle cx="1127" cy="101" r="13" fill="#FFFFFF"/>
+    <path d="M1148 72l17 18 25 3-18 17 4 25-23-12-22 12 4-25-18-17 25-3z" fill="#FFD76A"/>
+  </g>
+
+  <!-- Wordmark -->
+  <g transform="translate(512 183)">
+    <text x="0" y="0" font-family="Georgia, 'Times New Roman', serif" font-size="108" font-weight="900" letter-spacing="4" fill="#02030A" stroke="#02030A" stroke-width="14">WizardOS</text>
+    <text x="0" y="0" font-family="Georgia, 'Times New Roman', serif" font-size="108" font-weight="900" letter-spacing="4" fill="url(#gold)" stroke="#FFF2B8" stroke-width="1.2" filter="url(#goldGlow)">WizardOS</text>
+    <text x="8" y="64" font-family="Segoe UI, Inter, Arial, sans-serif" font-size="29" font-weight="700" letter-spacing="8" fill="url(#ice)" filter="url(#softGlow)">AI SPELL RECOGNITION SYSTEM</text>
+    <path d="M8 93 H691" stroke="url(#gold)" stroke-width="4" opacity="0.8" stroke-linecap="round"/>
+    <text x="10" y="135" font-family="Segoe UI, Inter, Arial, sans-serif" font-size="23" font-weight="600" letter-spacing="2" fill="#CDEEFF" opacity="0.92">Webcam gesture magic · local CV · cinematic particles</text>
+  </g>
+
+  <!-- Circuit-glyph underline -->
+  <g opacity="0.58" stroke="#75E7FF" stroke-width="3" fill="none" stroke-linecap="round" filter="url(#softGlow)">
+    <path d="M525 407h98l20-20h80l18 18h128l22-22h93"/>
+    <circle cx="623" cy="407" r="5" fill="#75E7FF"/><circle cx="723" cy="387" r="5" fill="#75E7FF"/><circle cx="869" cy="405" r="5" fill="#75E7FF"/><circle cx="984" cy="383" r="5" fill="#75E7FF"/>
+  </g>
+</svg>
