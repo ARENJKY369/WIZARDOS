@@ -1,0 +1,8 @@
+include *.md
+include *.txt
+include LICENSE
+recursive-include assets *
+recursive-include config *.json
+recursive-include spellbook *.json
+recursive-include logs .gitkeep
+recursive-include models .gitkeep

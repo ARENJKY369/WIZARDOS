@@ -51,10 +51,21 @@ WizardOS/
 
 ## Quick Start
 
-### 1. Create a Python 3.12 environment
+### 1. Install Python 3.12, 3.13, or 3.14
+
+WizardOS requires **Python ≥3.12, <3.15** (latest tested: **Python 3.14.6**).
+
+A `.python-version` file is included — if you use `pyenv`, it will auto-select the right version:
 
 ```bash
-python3.12 -m venv .venv
+pyenv install 3.14.6
+cd WizardOS/     # .python-version is read automatically
+```
+
+Or create a fresh virtual environment with your preferred Python version:
+
+```bash
+python3.14 -m venv .venv        # or python3.13 / python3.12
 source .venv/bin/activate        # Windows: .venv\Scripts\activate
 python -m pip install --upgrade pip
 ```
@@ -65,6 +76,8 @@ python -m pip install --upgrade pip
 pip install -r requirements.txt
 ```
 
+All dependencies (`PySide6 ≥6.8.1`, `mediapipe ≥0.10.35`, `opencv-python`, `numpy ≥2.0.0`, `pygame`, `rich`, `pyinstaller`) ship pre-built wheels for Python 3.12–3.14 on all major platforms.
+
 On Linux, OpenCV/PySide camera and OpenGL support may require system packages such as `libgl1`, `libegl1`, or `v4l-utils`, depending on your distribution.
 
 ### 3. Run WizardOS
@@ -72,6 +85,8 @@ On Linux, OpenCV/PySide camera and OpenGL support may require system packages su
 ```bash
 python app.py
 ```
+
+> **Tip:** You can also run via `python -m wizardos` or, after installing with `pip install -e .`, simply `wizardos` from anywhere.
 
 WizardOS starts the real webcam by default, usually camera index `0` on laptops. If your machine has multiple cameras, open **Settings → Scan Webcams**, choose the correct index, then press **Apply & Restart Webcam**. If no webcam is available, draw directly in the magic renderer with the left mouse button to demo spell recognition and training.
 
@@ -193,7 +208,7 @@ On Windows, replace `:` in `--add-data` with `;`.
 
 ## Development Notes
 
-- Python 3.12 target.
+- Python 3.12–3.14 target (requires ≥3.12, <3.15).
 - Object-oriented, modular architecture.
 - Type hints throughout core modules.
 - JSON-first persistence for transparency.
@@ -204,9 +219,10 @@ On Windows, replace `:` in `--add-data` with `;`.
 ## Troubleshooting
 
 - **Camera unavailable:** close other camera apps, check camera permissions, or use mouse drawing mode.
-- **MediaPipe install issues:** verify Python version and platform wheel availability.
+- **MediaPipe install issues:** verify Python version (must be ≥3.12, <3.15) — MediaPipe ≥0.10.35 ships universal `py3-none` wheels.
 - **No sound:** WizardOS continues silently if pygame mixer initialization fails.
 - **Low FPS:** lower camera resolution/FPS in `config/default_settings.json` or reduce particle quality in future renderer profiles.
+- **NumPy 2.x errors:** NumPy ≥2.0.0 is required for Python 3.12+. The code uses `np.ptp(arr)` (function form, not deprecated `ndarray.ptp()`).
 
 ## License / Content Note
 
