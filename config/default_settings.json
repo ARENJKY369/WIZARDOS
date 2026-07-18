@@ -1,0 +1,11 @@
+{
+  "camera": {"index": 0, "width": 1280, "height": 720, "fps": 60},
+  "vision": {"min_detection_confidence": 0.55, "min_tracking_confidence": 0.5, "smoothing": 0.68, "use_index_finger": true, "prefer_wand": true, "show_camera_overlay": true},
+  "recognition": {"confidence_threshold": 0.70, "stroke_timeout_ms": 850, "min_points": 18},
+  "graphics": {"particle_quality": "high", "glow_quality": "high", "trail_style": "arcane", "fullscreen": false},
+  "audio": {"enabled": true, "master_volume": 0.75, "spell_volume": 0.85, "ambient_volume": 0.25},
+  "profile": {"name": "Apprentice", "level": 1, "experience": 0, "mana": 100},
+  "actions": {"require_confirmation_for_external_launches": false},
+  "debug": false,
+  "language": "en"
+}

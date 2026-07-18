@@ -1,0 +1,13 @@
+__pycache__/
+*.py[cod]
+.venv/
+.env
+user_data/
+logs/*.log
+logs/*.log.*
+dist/
+build/
+*.spec
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
