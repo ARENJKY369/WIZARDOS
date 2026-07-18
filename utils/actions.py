@@ -1,4 +1,5 @@
 """Harmless desktop actions. All actions avoid elevation and destructive commands."""
+
 from __future__ import annotations
 import os
 import platform

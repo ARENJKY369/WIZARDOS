@@ -1,13 +1,26 @@
 """Main desktop application window."""
+
 from __future__ import annotations
 import time
 from collections import deque
 from PySide6.QtCore import Qt, QTimer
-from PySide6.QtGui import QImage, QPixmap, QColor, QAction, QKeySequence
+from PySide6.QtGui import QImage, QPixmap, QAction, QKeySequence
 from PySide6.QtWidgets import (
-    QMainWindow, QWidget, QHBoxLayout, QVBoxLayout, QLabel, QPushButton, QListWidget,
-    QProgressBar, QTabWidget, QTextEdit, QComboBox, QMessageBox, QSplitter,
-    QFormLayout, QSpinBox, QCheckBox
+    QMainWindow,
+    QWidget,
+    QHBoxLayout,
+    QVBoxLayout,
+    QLabel,
+    QPushButton,
+    QListWidget,
+    QProgressBar,
+    QTabWidget,
+    QTextEdit,
+    QComboBox,
+    QSplitter,
+    QFormLayout,
+    QSpinBox,
+    QCheckBox,
 )
 from camera.camera_manager import CameraWorker
 from config.settings import SettingsManager
@@ -90,13 +103,29 @@ class MainWindow(QMainWindow):
         self.camera_status_label = QLabel("Webcam: starting…")
         self.confidence_label = QLabel("Recognition confidence: 0%")
         self.current_spell_label = QLabel("Current spell: none")
-        for label in (self.fps_label, self.hand_label, self.tip_source_label, self.velocity_label, self.camera_status_label, self.confidence_label, self.current_spell_label):
+        for label in (
+            self.fps_label,
+            self.hand_label,
+            self.tip_source_label,
+            self.velocity_label,
+            self.camera_status_label,
+            self.confidence_label,
+            self.current_spell_label,
+        ):
             label.setObjectName("Metric")
             right.layout.addWidget(label)
-        self.mana = QProgressBar(); self.mana.setRange(0, 100); self.mana.setValue(100); self.mana.setFormat("Mana %p%")
-        self.xp = QProgressBar(); self.xp.setRange(0, 100); self.xp.setValue(12); self.xp.setFormat("Experience %p%")
-        right.layout.addWidget(self.mana); right.layout.addWidget(self.xp)
-        self.history = QListWidget(); self.history.addItem("Spell history will appear here")
+        self.mana = QProgressBar()
+        self.mana.setRange(0, 100)
+        self.mana.setValue(100)
+        self.mana.setFormat("Mana %p%")
+        self.xp = QProgressBar()
+        self.xp.setRange(0, 100)
+        self.xp.setValue(12)
+        self.xp.setFormat("Experience %p%")
+        right.layout.addWidget(self.mana)
+        right.layout.addWidget(self.xp)
+        self.history = QListWidget()
+        self.history.addItem("Spell history will appear here")
         right.layout.addWidget(self.history, 1)
         cast_lumos = QPushButton("Demo Burst: Lumos")
         cast_lumos.clicked.connect(lambda: self._cast_by_gesture("circle", 0.99))
@@ -106,40 +135,69 @@ class MainWindow(QMainWindow):
         return root
 
     def _spellbook_tab(self) -> QWidget:
-        root = QWidget(); layout = QHBoxLayout(root)
+        root = QWidget()
+        layout = QHBoxLayout(root)
         self.spell_list = QListWidget()
-        details = QTextEdit(); details.setReadOnly(True)
+        details = QTextEdit()
+        details.setReadOnly(True)
+
         def update_details() -> None:
             idx = self.spell_list.currentRow()
-            if idx < 0: return
+            if idx < 0:
+                return
             s = self.spellbook.spells[idx]
-            details.setHtml(f"<h1 style='color:{s.color}'>{s.name}</h1><p><b>Gesture:</b> {s.gesture}</p><p>{s.description}</p><p>Mana {s.mana_cost} · Cooldown {s.cooldown}s · Difficulty {s.difficulty}/5</p><p>Mastery {s.mastery_level}% · Accuracy {s.accuracy:.0%} · Casts {s.times_cast}</p><p>Action: {s.desktop_action}</p>")
+            details.setHtml(
+                f"<h1 style='color:{s.color}'>{s.name}</h1><p><b>Gesture:</b> {s.gesture}</p><p>{s.description}</p><p>Mana {s.mana_cost} · Cooldown {s.cooldown}s · Difficulty {s.difficulty}/5</p><p>Mastery {s.mastery_level}% · Accuracy {s.accuracy:.0%} · Casts {s.times_cast}</p><p>Action: {s.desktop_action}</p>"
+            )
+
         for spell in self.spellbook.spells:
             self.spell_list.addItem(f"★ {spell.name}" if spell.favorite else spell.name)
         self.spell_list.currentRowChanged.connect(update_details)
         self.spell_list.setCurrentRow(0)
-        layout.addWidget(self.spell_list, 1); layout.addWidget(details, 2)
+        layout.addWidget(self.spell_list, 1)
+        layout.addWidget(details, 2)
         return root
 
     def _training_tab(self) -> QWidget:
-        root = QWidget(); layout = QVBoxLayout(root)
-        layout.addWidget(QLabel("Select a spell, then draw in the renderer with the mouse or cast via webcam. Training compares trajectory accuracy, speed, and smoothness."))
+        root = QWidget()
+        layout = QVBoxLayout(root)
+        layout.addWidget(
+            QLabel("Select a spell, then draw in the renderer with the mouse or cast via webcam. Training compares trajectory accuracy, speed, and smoothness.")
+        )
         self.training_combo = QComboBox()
         for spell in self.spellbook.spells:
             self.training_combo.addItem(f"{spell.name} ({spell.gesture})", spell.gesture)
-        self.training_result = QTextEdit(); self.training_result.setReadOnly(True)
-        layout.addWidget(self.training_combo); layout.addWidget(self.training_result, 1)
+        self.training_result = QTextEdit()
+        self.training_result.setReadOnly(True)
+        layout.addWidget(self.training_combo)
+        layout.addWidget(self.training_result, 1)
         return root
 
     def _settings_tab(self) -> QWidget:
-        root = QWidget(); layout = QVBoxLayout(root)
-        layout.addWidget(QLabel("Advanced webcam controls. WizardOS now prefers the real webcam, auto-reconnects, and can track either a wand-like prop or your index finger."))
+        root = QWidget()
+        layout = QVBoxLayout(root)
+        layout.addWidget(
+            QLabel(
+                "Advanced webcam controls. WizardOS now prefers the real webcam, auto-reconnects, and can track either a wand-like prop or your index finger."
+            )
+        )
         form = QFormLayout()
-        self.camera_index_spin = QSpinBox(); self.camera_index_spin.setRange(0, 10); self.camera_index_spin.setValue(self.settings.get("camera.index", 0))
-        self.camera_width_spin = QSpinBox(); self.camera_width_spin.setRange(320, 3840); self.camera_width_spin.setSingleStep(160); self.camera_width_spin.setValue(self.settings.get("camera.width", 1280))
-        self.camera_height_spin = QSpinBox(); self.camera_height_spin.setRange(240, 2160); self.camera_height_spin.setSingleStep(120); self.camera_height_spin.setValue(self.settings.get("camera.height", 720))
-        self.camera_fps_spin = QSpinBox(); self.camera_fps_spin.setRange(15, 240); self.camera_fps_spin.setValue(self.settings.get("camera.fps", 60))
-        self.prefer_wand_check = QCheckBox("Prefer wand/pen/stylus tip when visible"); self.prefer_wand_check.setChecked(self.settings.get("vision.prefer_wand", True))
+        self.camera_index_spin = QSpinBox()
+        self.camera_index_spin.setRange(0, 10)
+        self.camera_index_spin.setValue(self.settings.get("camera.index", 0))
+        self.camera_width_spin = QSpinBox()
+        self.camera_width_spin.setRange(320, 3840)
+        self.camera_width_spin.setSingleStep(160)
+        self.camera_width_spin.setValue(self.settings.get("camera.width", 1280))
+        self.camera_height_spin = QSpinBox()
+        self.camera_height_spin.setRange(240, 2160)
+        self.camera_height_spin.setSingleStep(120)
+        self.camera_height_spin.setValue(self.settings.get("camera.height", 720))
+        self.camera_fps_spin = QSpinBox()
+        self.camera_fps_spin.setRange(15, 240)
+        self.camera_fps_spin.setValue(self.settings.get("camera.fps", 60))
+        self.prefer_wand_check = QCheckBox("Prefer wand/pen/stylus tip when visible")
+        self.prefer_wand_check.setChecked(self.settings.get("vision.prefer_wand", True))
         form.addRow("Camera index", self.camera_index_spin)
         form.addRow("Width", self.camera_width_spin)
         form.addRow("Height", self.camera_height_spin)
@@ -153,7 +211,9 @@ class MainWindow(QMainWindow):
         apply_restart.clicked.connect(self._apply_camera_settings)
         save = QPushButton("Save Current Settings")
         save.clicked.connect(self.settings.save)
-        buttons.addWidget(scan); buttons.addWidget(apply_restart); buttons.addWidget(save)
+        buttons.addWidget(scan)
+        buttons.addWidget(apply_restart)
+        buttons.addWidget(save)
         layout.addLayout(buttons)
         self.camera_scan_result = QLabel("Tip: choose camera 0 for most laptop webcams.")
         self.camera_scan_result.setObjectName("Metric")
@@ -162,15 +222,20 @@ class MainWindow(QMainWindow):
         return root
 
     def _stats_tab(self) -> QWidget:
-        root = QWidget(); layout = QVBoxLayout(root)
-        self.stats_text = QTextEdit(); self.stats_text.setReadOnly(True)
+        root = QWidget()
+        layout = QVBoxLayout(root)
+        self.stats_text = QTextEdit()
+        self.stats_text.setReadOnly(True)
         layout.addWidget(self.stats_text)
         self._refresh_stats()
         return root
 
     def _credits_tab(self) -> QWidget:
-        root = QWidget(); layout = QVBoxLayout(root)
-        layout.addWidget(QLabel("WizardOS is a local-only educational computer vision fantasy demo. No cloud services are used. Dangerous spells are visual/training only."))
+        root = QWidget()
+        layout = QVBoxLayout(root)
+        layout.addWidget(
+            QLabel("WizardOS is a local-only educational computer vision fantasy demo. No cloud services are used. Dangerous spells are visual/training only.")
+        )
         layout.addWidget(QLabel("Built with Python, PySide6, OpenCV, MediaPipe, NumPy, pygame, and procedural OpenGL-widget effects."))
         layout.addStretch(1)
         return root
@@ -180,7 +245,10 @@ class MainWindow(QMainWindow):
         fullscreen.setShortcut(QKeySequence("F11"))
         fullscreen.triggered.connect(lambda: self.showNormal() if self.isFullScreen() else self.showFullScreen())
         self.addAction(fullscreen)
-        quit_action = QAction("Quit", self); quit_action.setShortcut(QKeySequence("Ctrl+Q")); quit_action.triggered.connect(self.close); self.addAction(quit_action)
+        quit_action = QAction("Quit", self)
+        quit_action.setShortcut(QKeySequence("Ctrl+Q"))
+        quit_action.triggered.connect(self.close)
+        self.addAction(quit_action)
 
     def _start_camera(self) -> None:
         if hasattr(self, "camera") and self.camera.isRunning():
@@ -191,7 +259,13 @@ class MainWindow(QMainWindow):
             self.settings.get("vision.smoothing", 0.68),
             self.settings.get("vision.prefer_wand", True),
         )
-        self.camera = CameraWorker(self.settings.get("camera.index", 0), self.settings.get("camera.width", 1280), self.settings.get("camera.height", 720), self.settings.get("camera.fps", 60), tracker)
+        self.camera = CameraWorker(
+            self.settings.get("camera.index", 0),
+            self.settings.get("camera.width", 1280),
+            self.settings.get("camera.height", 720),
+            self.settings.get("camera.fps", 60),
+            tracker,
+        )
         self.camera.frame_ready.connect(self._on_frame)
         self.camera.tracking_ready.connect(self._on_tracking)
         self.camera.fps_ready.connect(lambda fps: self.fps_label.setText(f"FPS: {fps:.1f}"))
@@ -261,7 +335,9 @@ class MainWindow(QMainWindow):
             self._cast_by_gesture(result.gesture, result.confidence)
             expected = self.training_combo.currentData() if hasattr(self, "training_combo") else result.gesture
             score = self.training.score(stroke, expected, 1.5)
-            self.training_result.setText(f"Accuracy: {score.accuracy:.0%}\nSpeed: {score.speed:.0%}\nSmoothness: {score.smoothness:.0%}\nConfidence: {score.confidence:.0%}\nSuggestion: {score.suggestion}")
+            self.training_result.setText(
+                f"Accuracy: {score.accuracy:.0%}\nSpeed: {score.speed:.0%}\nSmoothness: {score.smoothness:.0%}\nConfidence: {score.confidence:.0%}\nSuggestion: {score.suggestion}"
+            )
 
     def _cast_by_gesture(self, gesture: str, confidence: float) -> None:
         spell = self.spellbook.by_gesture(gesture)

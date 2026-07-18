@@ -1,4 +1,5 @@
 """Procedural particle simulation for spell visuals."""
+
 from __future__ import annotations
 import math
 import random
@@ -45,7 +46,16 @@ class ParticleEngine:
         if self.ambient and len(self.particles) < 260:
             for _ in range(2):
                 c = QColor(100, 210, 255, random.randint(35, 95))
-                self.particles.append(Particle(QPointF(random.randrange(max(width,1)), height + 8), QPointF(random.uniform(-8, 8), random.uniform(-34, -12)), random.uniform(3, 8), 8, random.uniform(1, 3), c))
+                self.particles.append(
+                    Particle(
+                        QPointF(random.randrange(max(width, 1)), height + 8),
+                        QPointF(random.uniform(-8, 8), random.uniform(-34, -12)),
+                        random.uniform(3, 8),
+                        8,
+                        random.uniform(1, 3),
+                        c,
+                    )
+                )
         alive: list[Particle] = []
         for p in self.particles:
             p.life -= dt

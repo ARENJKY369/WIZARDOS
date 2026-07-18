@@ -1,4 +1,5 @@
 """Centralised filesystem paths for WizardOS."""
+
 from __future__ import annotations
 from pathlib import Path
 

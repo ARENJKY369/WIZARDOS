@@ -3,10 +3,10 @@
 If assets/sounds/<effect>.wav exists it will be played. Otherwise pygame emits a
 short synthesized tone so the app remains self-contained.
 """
+
 from __future__ import annotations
 import math
 import numpy as np
-from pathlib import Path
 from utils.paths import ASSETS
 
 try:

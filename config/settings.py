@@ -1,4 +1,5 @@
 """JSON settings loading/saving with safe defaults."""
+
 from __future__ import annotations
 import json
 from copy import deepcopy

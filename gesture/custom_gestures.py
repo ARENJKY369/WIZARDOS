@@ -1,4 +1,5 @@
 """Record, label, import, and export custom local gestures."""
+
 from __future__ import annotations
 import json
 from pathlib import Path

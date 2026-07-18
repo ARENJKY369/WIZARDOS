@@ -1,8 +1,8 @@
 """MediaPipe Hands + wand detection wrapper."""
+
 from __future__ import annotations
 from dataclasses import dataclass
 from collections import deque
-import math
 import time
 import numpy as np
 from .wand_detector import WandDetector, WandDetection
@@ -18,7 +18,7 @@ class HandTrackingResult:
     detected: bool
     tip: tuple[float, float] | None
     landmarks: list[tuple[float, float]]
-    source: str = "none"          # "wand", "finger", or "none"
+    source: str = "none"  # "wand", "finger", or "none"
     confidence: float = 0.0
     velocity: float = 0.0
     wand: WandDetection | None = None
@@ -26,6 +26,7 @@ class HandTrackingResult:
 
 class OneEuroLikeSmoother:
     """Adaptive exponential smoother tuned for low-latency cursor/wand motion."""
+
     def __init__(self, alpha: float = 0.68, fast_alpha: float = 0.38, fast_speed: float = 900.0) -> None:
         self.alpha = alpha
         self.fast_alpha = fast_alpha

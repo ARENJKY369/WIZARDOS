@@ -5,6 +5,7 @@ looks for a thin bright/dark wand-like segment near the hand. It makes webcam mo
 feel more advanced because users can cast with either their index finger or a pen,
 chopstick, stylus, or reflective wand prop.
 """
+
 from __future__ import annotations
 from dataclasses import dataclass
 import math
