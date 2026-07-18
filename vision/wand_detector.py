@@ -49,10 +49,17 @@ class WandDetector:
         if lines is None:
             return WandDetection(False)
 
+        # cv2.HoughLinesP can return either (N, 1, 4) or (N, 4) depending on OpenCV version
+        # Normalize to (N, 4) format
+        if lines.ndim == 3:
+            lines = lines[:, 0, :]
+        elif lines.ndim != 2:
+            return WandDetection(False)
+
         best: tuple[float, tuple[int, int], tuple[int, int]] | None = None
         h, w = gray.shape[:2]
         diagonal = math.hypot(w, h)
-        for raw in lines[:, 0, :]:
+        for raw in lines:
             x1, y1, x2, y2 = map(int, raw)
             length = math.hypot(x2 - x1, y2 - y1)
             if length < self.min_length:
