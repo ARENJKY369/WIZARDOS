@@ -1,4 +1,5 @@
 """Rich logging setup used by every subsystem."""
+
 from __future__ import annotations
 import logging
 from logging.handlers import RotatingFileHandler

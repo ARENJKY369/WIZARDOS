@@ -3,6 +3,7 @@
 It is fast, deterministic, trainable from examples, and tolerant of drawing speed,
 translation, and scale. Custom examples can be persisted as JSON.
 """
+
 from __future__ import annotations
 import json
 import math
@@ -114,15 +115,18 @@ def default_templates() -> dict[str, list[Point]]:
     circle = [(math.cos(t), math.sin(t)) for t in np.linspace(0, 2 * math.pi, 96)]
     reverse_circle = list(reversed(circle))
     spiral = [(t / 7 * math.cos(t), t / 7 * math.sin(t)) for t in np.linspace(0.2, 4 * math.pi, 96)]
-    heart = [(16 * math.sin(t) ** 3 / 18, -(13 * math.cos(t) - 5 * math.cos(2*t) - 2 * math.cos(3*t) - math.cos(4*t)) / 18) for t in np.linspace(0, 2*math.pi, 96)]
+    heart = [
+        (16 * math.sin(t) ** 3 / 18, -(13 * math.cos(t) - 5 * math.cos(2 * t) - 2 * math.cos(3 * t) - math.cos(4 * t)) / 18)
+        for t in np.linspace(0, 2 * math.pi, 96)
+    ]
     infinity = [(math.sin(t), math.sin(t) * math.cos(t)) for t in np.linspace(0, 2 * math.pi, 96)]
     wave = [(x, 0.45 * math.sin(2.8 * x)) for x in np.linspace(-1, 1, 96)]
     star_points = []
     for i in range(5):
-        a = -math.pi/2 + i * 2*math.pi/5
+        a = -math.pi / 2 + i * 2 * math.pi / 5
         star_points.append((math.cos(a), math.sin(a)))
-        a2 = a + math.pi/5
-        star_points.append((0.42*math.cos(a2), 0.42*math.sin(a2)))
+        a2 = a + math.pi / 5
+        star_points.append((0.42 * math.cos(a2), 0.42 * math.sin(a2)))
     return {
         "circle": circle,
         "reverse_circle": reverse_circle,

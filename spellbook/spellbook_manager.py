@@ -1,4 +1,5 @@
 """Spell database, cooldowns, and persistent mastery stats."""
+
 from __future__ import annotations
 import json
 import time

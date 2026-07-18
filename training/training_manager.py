@@ -1,4 +1,5 @@
 """Training scoring helpers for selected spell practice."""
+
 from __future__ import annotations
 from dataclasses import dataclass
 from gesture.recognizer import GestureRecognizer
@@ -40,6 +41,6 @@ class TrainingManager:
             v2 = (c[0] - b[0], c[1] - b[1])
             n1 = max((v1[0] ** 2 + v1[1] ** 2) ** 0.5, 1e-6)
             n2 = max((v2[0] ** 2 + v2[1] ** 2) ** 0.5, 1e-6)
-            dot = max(-1, min(1, (v1[0]*v2[0] + v1[1]*v2[1]) / (n1*n2)))
+            dot = max(-1, min(1, (v1[0] * v2[0] + v1[1] * v2[1]) / (n1 * n2)))
             angles.append(abs(dot))
         return sum(angles) / len(angles)

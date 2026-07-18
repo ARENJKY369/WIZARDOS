@@ -1,4 +1,5 @@
 """Hogwarts-inspired Qt stylesheet."""
+
 DARK_QSS = """
 * { font-family: 'Segoe UI', 'Inter', sans-serif; color: #EAF6FF; }
 QMainWindow, QWidget { background: #060914; }

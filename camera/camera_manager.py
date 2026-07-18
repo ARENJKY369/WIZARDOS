@@ -1,4 +1,5 @@
 """Qt camera worker that captures frames and runs hand/wand tracking off the UI thread."""
+
 from __future__ import annotations
 import time
 import cv2
@@ -102,15 +103,33 @@ class CameraWorker(QThread):
         # Landmark bones for the hand skeleton.
         if tracking.landmarks:
             bones = [
-                (0, 1), (1, 2), (2, 3), (3, 4),
-                (0, 5), (5, 6), (6, 7), (7, 8),
-                (0, 9), (9, 10), (10, 11), (11, 12),
-                (0, 13), (13, 14), (14, 15), (15, 16),
-                (0, 17), (17, 18), (18, 19), (19, 20),
-                (5, 9), (9, 13), (13, 17),
+                (0, 1),
+                (1, 2),
+                (2, 3),
+                (3, 4),
+                (0, 5),
+                (5, 6),
+                (6, 7),
+                (7, 8),
+                (0, 9),
+                (9, 10),
+                (10, 11),
+                (11, 12),
+                (0, 13),
+                (13, 14),
+                (14, 15),
+                (15, 16),
+                (0, 17),
+                (17, 18),
+                (18, 19),
+                (19, 20),
+                (5, 9),
+                (9, 13),
+                (13, 17),
             ]
             for a, b in bones:
-                pa = tuple(map(int, tracking.landmarks[a])); pb = tuple(map(int, tracking.landmarks[b]))
+                pa = tuple(map(int, tracking.landmarks[a]))
+                pb = tuple(map(int, tracking.landmarks[b]))
                 cv2.line(frame, pa, pb, (80, 220, 255), 2, cv2.LINE_AA)
             for p in tracking.landmarks:
                 cv2.circle(frame, tuple(map(int, p)), 3, (245, 215, 100), -1, cv2.LINE_AA)

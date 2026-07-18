@@ -1,4 +1,5 @@
 """QOpenGLWidget renderer for trails, particles, and spell bursts."""
+
 from __future__ import annotations
 import time
 from collections import deque

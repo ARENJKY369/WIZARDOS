@@ -1,9 +1,9 @@
 """Persistent statistics and achievements."""
+
 from __future__ import annotations
 import json
 from dataclasses import dataclass, asdict, field
 from pathlib import Path
-from typing import Any
 from utils.paths import USER_DATA
 
 
