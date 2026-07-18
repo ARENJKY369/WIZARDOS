@@ -9,6 +9,7 @@ from .wand_detector import WandDetector, WandDetection
 
 try:  # Optional at runtime for documentation builds/tests.
     import mediapipe as mp
+    import mediapipe.python.solutions as mps  # compatibility
 except Exception:  # pragma: no cover
     mp = None  # type: ignore
 
@@ -66,7 +67,7 @@ class HandTracker:
         if mp is None:
             self.hands = None
         else:
-            self.mp_hands = mp.solutions.hands
+            self.mp_hands = getattr(mp, 'solutions', mps).hands
             self.hands = self.mp_hands.Hands(
                 static_image_mode=False,
                 max_num_hands=1,
