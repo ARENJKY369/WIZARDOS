@@ -42,6 +42,24 @@ class ParticleEngine:
             c.setAlpha(random.randint(120, 255))
             self.particles.append(Particle(pos, vel, random.uniform(0.55, 1.8), random.uniform(0.8, 1.8), random.uniform(2, 9), c, random.uniform(-6, 6)))
 
+    def add_trail_particles(self, x: float, y: float, color: QColor, amount: int = 3) -> None:
+        for _ in range(amount):
+            angle = random.random() * math.tau
+            speed = random.uniform(15, 80)
+            vel = QPointF(math.cos(angle) * speed, -random.uniform(5, 45))
+            c = QColor(color)
+            c.setAlpha(random.randint(150, 255))
+            self.particles.append(
+                Particle(
+                    QPointF(x, y),
+                    vel,
+                    random.uniform(0.25, 0.75),
+                    random.uniform(0.25, 0.75),
+                    random.uniform(1.5, 4.5),
+                    c,
+                )
+            )
+
     def update(self, dt: float, width: int, height: int) -> None:
         if self.ambient and len(self.particles) < 260:
             for _ in range(2):
